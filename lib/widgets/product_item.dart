@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_workout_myshop/providers/cart.dart';
 import 'package:flutter_workout_myshop/providers/product.dart';
 import 'package:provider/provider.dart';
 import '../screens/product_detail_screen.dart';
@@ -12,9 +13,9 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final product = Provider.of<Product>(context);
-    return Consumer<Product>(
-      builder: (ctx, product, child) => ClipRRect(
+    final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context);
+    return ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: GridTile(
           child: GestureDetector(
@@ -45,12 +46,14 @@ class ProductItem extends StatelessWidget {
             ),
             trailing: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                cart.addItem(product.id, product.price, product.title);
+              },
               color: Theme.of(context).accentColor,
             ),
           ),
         ),
-      ),
-    );
+      );
+    
   }
 }

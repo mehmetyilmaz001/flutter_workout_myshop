@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_workout_myshop/providers/cart.dart';
 import 'package:flutter_workout_myshop/providers/products.dart';
+import 'package:flutter_workout_myshop/screens/cart_screen.dart';
+import 'package:flutter_workout_myshop/widgets/badge.dart';
 import 'package:flutter_workout_myshop/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +43,18 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                   value: FilterOptions.All,
                 ),
               ],
+            ),
+            Consumer<Cart>(
+              builder: (_, cart, ch) => Badge(
+                child: ch,
+                value: cart.itemCount.toString(),
+              ),
+              child: IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(CartScreen.routeName);
+                  },
+                ),
             )
           ],
         ),
