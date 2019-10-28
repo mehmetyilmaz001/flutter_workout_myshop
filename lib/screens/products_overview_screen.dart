@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_myshop/providers/cart.dart';
-import 'package:flutter_workout_myshop/providers/products.dart';
 import 'package:flutter_workout_myshop/screens/cart_screen.dart';
+import 'package:flutter_workout_myshop/widgets/app_drawer.dart';
 import 'package:flutter_workout_myshop/widgets/badge.dart';
 import 'package:flutter_workout_myshop/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +58,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             )
           ],
         ),
+        drawer: AppDrawer(),
         body: ProductsGrid(_showOnlyFavorite));
   }
 }

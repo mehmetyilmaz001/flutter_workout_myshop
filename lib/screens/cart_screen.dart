@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_myshop/providers/cart.dart' show Cart;
+import 'package:flutter_workout_myshop/providers/orders.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_workout_myshop/widgets/cart_item.dart';
 
@@ -61,7 +62,7 @@ class TotalCard extends StatelessWidget {
               Spacer(),
               Chip(
                 label: Text(
-                  '\$${cart.totalAmount}',
+                  '\$${cart.totalAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                       color: Theme.of(context).primaryTextTheme.title.color),
                 ),
@@ -69,7 +70,12 @@ class TotalCard extends StatelessWidget {
               ),
               FlatButton(
                 child: Text('ORDER NOW'),
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<Orders>(context, listen: false)
+                      .addOrder(cart.items.values.toList(), cart.totalAmount);
+
+                  cart.clear();
+                },
                 textColor: Theme.of(context).primaryColor,
               )
             ],
