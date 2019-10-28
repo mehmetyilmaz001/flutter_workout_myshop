@@ -5,7 +5,7 @@ import 'package:flutter_workout_myshop/widgets/order_list_item.dart';
 import 'package:provider/provider.dart';
 
 class OrdersScreen extends StatelessWidget {
-  static const roueteName = '/orders';
+  static const routeName = '/orders';
   @override
   Widget build(BuildContext context) {
     final orderData = Provider.of<Orders>(context);
