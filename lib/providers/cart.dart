@@ -20,21 +20,20 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
-  int get itemCount{
+  int get itemCount {
     return _items == null ? 0 : _items.length;
   }
 
-  double get totalAmount{
+  double get totalAmount {
     var total = 0.0;
-    _items.forEach((key,item){
+    _items.forEach((key, item) {
       total += item.price * item.quantity;
-    } );
+    });
 
     return total;
   }
 
-
-  void removeItem(String id){
+  void removeItem(String id) {
     _items.remove(id);
     notifyListeners();
   }
@@ -62,8 +61,28 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  void clear(){
+  void clear() {
     _items = {};
+    notifyListeners();
+  }
+
+  void removeSingleItem(String productKey) {
+    if (!_items.containsKey(productKey)) {
+      return;
+    }
+
+    if (_items[productKey].quantity > 1) {
+      _items.update(
+          productKey,
+          (existing) => CartItem(
+              id: existing.id,
+              title: existing.title,
+              price: existing.price,
+              quantity: existing.quantity - 1));
+    }else{
+      _items.remove(productKey);
+    }
+
     notifyListeners();
   }
 }
