@@ -8,5 +8,6 @@ A new Flutter about simple shop management.
 - List/Detail
 - Routing
 - Deleting items on list view with dismissible
+- Working with snackbars
 
 Mehmet Yılmaz
