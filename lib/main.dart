@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workout_myshop/providers/cart.dart';
 import 'package:flutter_workout_myshop/providers/orders.dart';
 import 'package:flutter_workout_myshop/screens/cart_screen.dart';
+import 'package:flutter_workout_myshop/screens/edit_product.screen.dart';
 import 'package:flutter_workout_myshop/screens/orders_screen.dart';
 import 'package:flutter_workout_myshop/screens/user_products_screen.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
           ProductDetailScreen.routePath: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(), 
-          UserProductsScreen.routeName: (ctx) => UserProductsScreen() 
+          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+          EditProductScreen.routeName: (ctx) => EditProductScreen()
           },
       ),
     );

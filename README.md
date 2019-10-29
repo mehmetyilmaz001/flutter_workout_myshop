@@ -9,5 +9,6 @@ A new Flutter about simple shop management.
 - Routing
 - Deleting items on list view with dismissible
 - Working with snackbars
+- Form
 
 Mehmet Yılmaz
