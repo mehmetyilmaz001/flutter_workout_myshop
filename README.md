@@ -10,5 +10,6 @@ A new Flutter about simple shop management.
 - Deleting items on list view with dismissible
 - Working with snackbars
 - Form
+- Validation Form Inputs
 
 Mehmet Yılmaz
