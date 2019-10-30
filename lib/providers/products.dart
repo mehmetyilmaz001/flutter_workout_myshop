@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'dart:convert';
 import './product.dart';
 
 class Products with ChangeNotifier {
@@ -44,7 +46,20 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  void addProduct(Product product) {
+  Future addProduct(Product product) async {
+
+    const url = 'https://flutter-test-shopapp.firebaseio.com/products.json';
+    Response response = await http.post(url, body: json.encode({
+      'title': product.title,
+      'description': product.description,
+      'price': product.price,
+      'imageUrl': product.imageUrl,
+      'isFavorite': product.isFavorite
+    }),headers: {"Content-type": "application/x-www-form-urlencoded"});
+
+    print(response.statusCode);
+    print(json.decode(response.body));
+
     final newProduct = Product(
         id: DateTime.now().toString(),
         title: product.title,
