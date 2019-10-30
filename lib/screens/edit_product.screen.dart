@@ -18,13 +18,41 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _form = GlobalKey<FormState>();
+  var _isInit = false;
   var _editedProduct =
       Product(id: null, title: '', price: 0, description: '', imageUrl: '');
+  var _initValues = {'title': '', 'description': '', 'price': '', 'imageUrl': ''};
 
   @override
   void initState() {
-    _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
+    _imageUrlFocusNode.addListener(_updateImageUrl);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    //Load created product for edit
+    if (!_isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if (productId != null) {
+        final product =
+            Provider.of<Products>(context, listen: false).findById(productId);
+        _editedProduct = product;
+        _initValues = {
+          'title': _editedProduct.title,
+          'description': _editedProduct.description,
+          'price': _editedProduct.price.toString(),
+          //'imageUrl': _editedProduct.imageUrl,
+          'imageUrl': ''
+        };
+
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
+    }
+
+    _isInit = true;
   }
 
   @override
@@ -44,42 +72,50 @@ class _EditProductScreenState extends State<EditProductScreen> {
       setState(() {});
 
       String validateImageUrlRes = validateImageUrl(_imageUrlController.text);
-      if(validateImageUrlRes != null){
+      if (validateImageUrlRes != null) {
         return;
       }
     }
   }
 
-String validateImageUrl(val){
-  if(val.isEmpty){
-    return 'Please enter image URL';
-  }
+  String validateImageUrl(val) {
+    if (val.isEmpty) {
+      return 'Please enter image URL';
+    }
 
-  if(!val.startsWith('http') || !val.startsWith('https')){
-    return 'Please enter a valid image URL';
-  }
+    if (!val.startsWith('http') || !val.startsWith('https')) {
+      return 'Please enter a valid image URL';
+    }
 
-  return null;
-}
+    return null;
+  }
 
   void _saveForm() {
     final isValid = _form.currentState.validate();
-    
-    if(!isValid){
+
+    if (!isValid) {
       return;
     }
 
     _form.currentState.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    if(isEditMode()){
+      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
+    }else{
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
+    
     Navigator.of(context).pop();
+  }
 
+  bool isEditMode(){
+    return _editedProduct.id != null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Product'),
+        title: Text(isEditMode() ? 'Edit Product' : 'New Product'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
@@ -94,13 +130,14 @@ String validateImageUrl(val){
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
                 validator: (val) {
-                  if(val.isEmpty){
+                  if (val.isEmpty) {
                     return 'Please provide a value';
                   }
                   return null;
@@ -111,11 +148,13 @@ String validateImageUrl(val){
                       price: _editedProduct.price,
                       description: _editedProduct.description,
                       imageUrl: _editedProduct.imageUrl,
-                      id: null
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite
                       );
                 },
               ),
               TextFormField(
+                initialValue: _initValues['price'],
                 decoration: InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -124,15 +163,15 @@ String validateImageUrl(val){
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
                 validator: (val) {
-                  if(val.isEmpty){
+                  if (val.isEmpty) {
                     return 'Please enter price';
                   }
 
-                  if(double.tryParse(val) == null){
+                  if (double.tryParse(val) == null) {
                     return 'Please enter a valid price';
                   }
 
-                  if(double.parse(val) <= 0){
+                  if (double.parse(val) <= 0) {
                     return 'Please enter a number greater then zero';
                   }
 
@@ -144,21 +183,23 @@ String validateImageUrl(val){
                       price: double.parse(val),
                       description: _editedProduct.description,
                       imageUrl: _editedProduct.imageUrl,
-                      id: null
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite
                       );
                 },
               ),
               TextFormField(
+                initialValue: _initValues['description'],
                 decoration: InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
                 validator: (val) {
-                  if(val.isEmpty){
+                  if (val.isEmpty) {
                     return 'Please provide a value';
                   }
 
-                  if(val.length < 10){
+                  if (val.length < 10) {
                     return 'Sholud be at least 10 characters';
                   }
                   return null;
@@ -169,8 +210,9 @@ String validateImageUrl(val){
                       price: _editedProduct.price,
                       description: val,
                       imageUrl: _editedProduct.imageUrl,
-                      id: null
-                      );
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite
+                    );
                 },
               ),
               Row(
@@ -205,14 +247,15 @@ String validateImageUrl(val){
                         return validateImageUrl(val);
                       },
                       onSaved: (val) {
-                  _editedProduct = Product(
-                      title: _editedProduct.title,
-                      price: _editedProduct.price,
-                      description: _editedProduct.description,
-                      imageUrl: val,
-                      id: null
-                      );
-                },
+                        _editedProduct = Product(
+                            title: _editedProduct.title,
+                            price: _editedProduct.price,
+                            description: _editedProduct.description,
+                            imageUrl: val,
+                            id: _editedProduct.id,
+                            isFavorite: _editedProduct.isFavorite
+                          );
+                      },
                     ),
                   )
                 ],
