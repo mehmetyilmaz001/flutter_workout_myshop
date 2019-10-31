@@ -45,9 +45,10 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addProduct(Product product) {
-    const url = 'https://flutter-test-shopapp.firebaseio.com/products.json';
-    return http
+  Future<void> addProduct(Product product) async {
+    const url = 'https://flutter-test-shopapp.firebaseio.com/products';
+    try{
+     final response = await http
         .post(url,
             body: json.encode({
               'title': product.title,
@@ -55,12 +56,12 @@ class Products with ChangeNotifier {
               'price': product.price,
               'imageUrl': product.imageUrl,
               'isFavorite': product.isFavorite
-            }))
-        .then((res) {
-      print(json.decode(res.body));
+            }));
+      
+      print(json.decode(response.body));
 
       final newProduct = Product(
-          id: json.decode(res.body)['name'],
+          id: json.decode(response.body)['name'],
           title: product.title,
           description: product.description,
           price: product.price,
@@ -70,7 +71,10 @@ class Products with ChangeNotifier {
       //_items.insert(0, newProduct); // adds the start of the list
 
       notifyListeners();
-    });
+    }catch(err){
+      print(err);
+      throw(err);
+    }
   }
 
   void updateProduct(String id, Product updatedProduct) {
