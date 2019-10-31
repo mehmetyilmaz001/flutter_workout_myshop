@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'dart:convert';
 import './product.dart';
 
@@ -46,46 +45,45 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-  Future addProduct(Product product) async {
-
+  Future<void> addProduct(Product product) {
     const url = 'https://flutter-test-shopapp.firebaseio.com/products.json';
-    Response response = await http.post(url, body: json.encode({
-      'title': product.title,
-      'description': product.description,
-      'price': product.price,
-      'imageUrl': product.imageUrl,
-      'isFavorite': product.isFavorite
-    }),headers: {"Content-type": "application/x-www-form-urlencoded"});
+    return http
+        .post(url,
+            body: json.encode({
+              'title': product.title,
+              'description': product.description,
+              'price': product.price,
+              'imageUrl': product.imageUrl,
+              'isFavorite': product.isFavorite
+            }))
+        .then((res) {
+      print(json.decode(res.body));
 
-    print(response.statusCode);
-    print(json.decode(response.body));
+      final newProduct = Product(
+          id: json.decode(res.body)['name'],
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl);
 
-    final newProduct = Product(
-        id: DateTime.now().toString(),
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl);
+      _items.add(newProduct);
+      //_items.insert(0, newProduct); // adds the start of the list
 
-       _items.add(newProduct);
-       //_items.insert(0, newProduct); // adds the start of the list
-
-       notifyListeners();
-      
+      notifyListeners();
+    });
   }
 
-
-  void updateProduct(String id, Product updatedProduct){
+  void updateProduct(String id, Product updatedProduct) {
     final itemIndex = _items.indexWhere((item) => item.id == id);
-    if(itemIndex >= 0 ){
+    if (itemIndex >= 0) {
       _items[itemIndex] = updatedProduct;
       notifyListeners();
-    }else{
+    } else {
       print('Could not find the object to update $id');
     }
   }
 
-  void deleteProduct(String id){
+  void deleteProduct(String id) {
     _items.removeWhere((item) => item.id == id);
     notifyListeners();
   }
