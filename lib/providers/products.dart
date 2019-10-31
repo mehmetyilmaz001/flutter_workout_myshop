@@ -4,7 +4,7 @@ import 'dart:convert';
 import './product.dart';
 
 class Products with ChangeNotifier {
-   List<Product> _items = [
+  List<Product> _items = [
     // Product(
     //   id: 'p1',
     //   title: 'Red Shirt',
@@ -100,10 +100,20 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product updatedProduct) {
+  Future<void> updateProduct(String id, Product updatedProduct) async {
     final itemIndex = _items.indexWhere((item) => item.id == id);
+
     if (itemIndex >= 0) {
       _items[itemIndex] = updatedProduct;
+      final url =
+          'https://flutter-test-shopapp.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': updatedProduct.title,
+            'description': updatedProduct.description,
+            'imageUrl': updatedProduct.imageUrl,
+            'price': updatedProduct.price
+          }));
       notifyListeners();
     } else {
       print('Could not find the object to update $id');
@@ -118,16 +128,6 @@ class Products with ChangeNotifier {
   List<Product> get favoriteItems {
     return _items.where((item) => item.isFavorite).toList();
   }
-
-  // void showFavoritesOnly() {
-  //   _showFavoritesOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll() {
-  //   _showFavoritesOnly = false;
-  //   notifyListeners();
-  // }
 
   Product findById(String id) {
     return _items.firstWhere((item) => item.id == id);
