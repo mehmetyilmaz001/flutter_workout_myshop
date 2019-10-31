@@ -11,7 +11,7 @@ A new Flutter about simple shop management.
 - Working with snackbars
 - Form
 - Validation Form Inputs
-- Http GET, POST (Firebase)
+- Http GET, POST, PATCH (Firebase)
 - Pull to refresh
 
 Mehmet Yılmaz
