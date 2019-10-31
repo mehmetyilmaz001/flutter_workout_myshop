@@ -38,13 +38,20 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-class TotalCard extends StatelessWidget {
+class TotalCard extends StatefulWidget {
   const TotalCard({
     Key key,
     @required this.cart,
   }) : super(key: key);
 
   final Cart cart;
+
+  @override
+  _TotalCardState createState() => _TotalCardState();
+}
+
+class _TotalCardState extends State<TotalCard> {
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,20 +69,30 @@ class TotalCard extends StatelessWidget {
               Spacer(),
               Chip(
                 label: Text(
-                  '\$${cart.totalAmount.toStringAsFixed(2)}',
+                  '\$${widget.cart.totalAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                       color: Theme.of(context).primaryTextTheme.title.color),
                 ),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
               FlatButton(
-                child: Text('ORDER NOW'),
-                onPressed: () {
-                  Provider.of<Orders>(context, listen: false)
-                      .addOrder(cart.items.values.toList(), cart.totalAmount);
+                child: _isLoading ? CircularProgressIndicator() : Text('ORDER NOW'),
+                onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+                    ? null
+                    : () async {
+                        
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-                  cart.clear();
-                },
+                        await Provider.of<Orders>(context, listen: false)
+                            .addOrder(widget.cart.items.values.toList(),
+                                widget.cart.totalAmount);
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        widget.cart.clear();
+                      },
                 textColor: Theme.of(context).primaryColor,
               )
             ],

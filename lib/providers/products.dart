@@ -18,6 +18,9 @@ class Products with ChangeNotifier {
     try {
       final response = await http.get(url);
       final data = json.decode(response.body) as Map<String, dynamic>;
+      if (data == null) {
+        return;
+      }
       List<Product> loadedProducts = [];
       data.forEach((id, item) {
         loadedProducts.add(Product(
@@ -29,7 +32,7 @@ class Products with ChangeNotifier {
             isFavorite: item['isFavorite']));
       });
       notifyListeners();
-      print(json.decode(response.body));
+      //print(json.decode(response.body));
 
       _items = loadedProducts;
     } catch (err) {
