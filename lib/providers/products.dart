@@ -22,7 +22,6 @@ class Products with ChangeNotifier {
     final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
         'https://flutter-test-shopapp.firebaseio.com/products.json?auth=$authToken&$filterString';
-        print(url);
     try {
       final response = await http.get(url);
       final data = json.decode(response.body) as Map<String, dynamic>;
