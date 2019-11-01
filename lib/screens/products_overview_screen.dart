@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_myshop/providers/cart.dart';
-import 'package:flutter_workout_myshop/providers/product.dart';
 import 'package:flutter_workout_myshop/providers/products.dart';
 import 'package:flutter_workout_myshop/screens/cart_screen.dart';
 import 'package:flutter_workout_myshop/widgets/app_drawer.dart';
@@ -11,6 +10,7 @@ import 'package:provider/provider.dart';
 enum FilterOptions { Favorites, All }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  static const routePath = '/products-overview';
   @override
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
