@@ -13,5 +13,7 @@ A new Flutter about simple shop management.
 - Validation Form Inputs
 - Http GET, POST, PATCH (Firebase)
 - Pull to refresh
+- Authentication
+
 
 Mehmet Yılmaz
