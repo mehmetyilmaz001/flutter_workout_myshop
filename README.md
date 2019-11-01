@@ -14,6 +14,6 @@ A new Flutter about simple shop management.
 - Http GET, POST, PATCH (Firebase)
 - Pull to refresh
 - Authentication
-
+- Storing token info in the shared prefs and auto loging
 
 Mehmet Yılmaz
