@@ -15,5 +15,6 @@ A new Flutter about simple shop management.
 - Pull to refresh
 - Authentication
 - Storing token info in the shared prefs and auto loging
+- Animation
 
 Mehmet Yılmaz
