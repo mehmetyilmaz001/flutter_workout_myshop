@@ -71,6 +71,7 @@ class Auth with ChangeNotifier {
          'expiryDate': _expiryDate.toString()});
       pref.setString('userData', userData);
     } catch (error) {
+     
       throw error;
     }
   }

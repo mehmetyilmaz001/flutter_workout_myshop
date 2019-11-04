@@ -135,7 +135,7 @@ class _AuthCardState extends State<AuthCard> {
         await Provider.of<Auth>(context, listen: false)
             .signUp(_authData['email'], _authData['password']);
       }
-      Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routePath);
+      Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
     } on HttpException catch (e) {
       var errorMessage = 'Authentication failed!';
       if (e.message.toString().contains('EMAIL_EXISTS')) {
@@ -234,7 +234,7 @@ class _AuthCardState extends State<AuthCard> {
                   RaisedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
+                    onPressed: () {_submit();},
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
