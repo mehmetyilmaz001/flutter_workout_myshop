@@ -6,6 +6,7 @@ A new Flutter about simple shop management.
 
 - Global state management
 - List/Detail
+- SliverAppBar and Hero with list detail
 - Routing
 - Deleting items on list view with dismissible
 - Working with snackbars
